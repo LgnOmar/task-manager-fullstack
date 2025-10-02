@@ -1,7 +1,7 @@
 #'path' and 'include' are for defining URL patterns.
 # 'defaultRouter' is the tool that automatically generates our API URLs
-from django.URLs import path, include
-from rest_framework.routers import defaultRouter
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 
 #import the viewset we created
 from .views import TaskViewSet
@@ -20,5 +20,5 @@ router.register(r'tasks', TaskViewSet, basename='task')
 # We just need to include the generated URLs in our url patterns.
 
 urlpatterns = [
-    path('', include(router.URLs)),
+    path('', include(router.urls)),
 ]

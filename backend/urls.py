@@ -1,16 +1,16 @@
 from django.contrib import admin
-from django.URLs import path, include
+from django.urls import path, include
 
 #import the specific views from the simplejwl library for getting tokens.
 from rest_framework_simplejwt.views import (
-    TokenOntainPairView,
+    TokenObtainPairView,
     TokenRefreshView,
 )
 
 # this is the main URL configuration for the whole project
 urlpatterns = [
     # this is the default Django admin site URL, we can leave it.
-    path('admin/', admin.site.URLs),
+    path('admin/', admin.site.urls),
 
 
     # AUTHENTICATION URLS
@@ -27,3 +27,5 @@ urlpatterns = [
     # it says "any URL that starts with 'api/' should be forwarded to the urls.py file inside the 'tasks' app for further instructions"
     path('api/', include('tasks.urls')),
 ]
+
+

@@ -3,6 +3,9 @@
 # we also need 'IsAuthenticated' to enforce our security rules
 
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+
+from .models import Task
 from .serializers import TaskSerializer
 
 # This is our ViewSet - the main logic controller for Tasks.
@@ -14,7 +17,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     """
 
     #Connect the translator: This viewset will use the TaskSerializer to convert data ro and from JSON.
-    serializer_class - TaskSerializer
+    serializer_class = TaskSerializer
 
     #Set the security rule: Only authenticated [logged-in] users can access this endpoint. no exceptions.
     permission_classes = [IsAuthenticated]
@@ -30,12 +33,12 @@ class TaskViewSet(viewsets.ModelViewSet):
 
         return Task.objects.filter(user=self.request.user)
 
-        # this function is called right before a new task is saved.
-        def perform_create(self, serializer):
-            """
-            when creating a new task, automatically assign it to the currently authenticated user.
-            """
+    # this function is called right before a new task is saved.
+    def perform_create(self, serializer):
+        """
+        when creating a new task, automatically assign it to the currently authenticated user.
+        """
 
-            # The serializer is about to save the data. we inject the user object into the data before it's saved. this prevents a user from creating a task for someone else.
+        # The serializer is about to save the data. we inject the user object into the data before it's saved. this prevents a user from creating a task for someone else.
 
-            serializer.save(user=self.request.user)
+        serializer.save(user=self.request.user)
