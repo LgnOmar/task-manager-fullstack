@@ -2,7 +2,8 @@ import { useState } from "react";
 import axios from "axios";
 
 
-function Login(){
+// Let's "desctucture" the props to get the setToken function passed from App.jsx
+function Login({ setToken }){
 
     // Give the component memory for the username and password input
     // the initial values are empty strings.
@@ -21,11 +22,14 @@ function Login(){
                 username: username,
                 password: password,
             });
+            const accessToken = response.data.access;
 
-            //for now we just log the entire response to see the token
-            console.log('Login successful:', response.data);
+            // Save the token to the browser's local storage which makes it persist across page reloads
+            localStorage.setItem('accessToken', accessToken)
 
-            //solving the token will do it later
+            // Update the parent component's state by calling the passed-in function which triggers the conditional rendering in App.jsx
+            setToken(accessToken);
+
 
         } catch (error) {
             console.error('Login failed:', error)
