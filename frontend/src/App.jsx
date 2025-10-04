@@ -1,52 +1,49 @@
-
-import { useState,useEffect } from "react"
-import Login from "./components/Login"
+import { useState, useEffect } from "react";
+import Login from "./components/Login";
 import TaskList from "./components/TaskList";
 
-
-function App(){
+function App() {
   const [token, setToken] = useState(null);
 
-
-  // --- useEffect Hook for Initial Load ---
-  // This code runs ONLY ONCE at mount, the empty dependency array [] at the end ensures it only runs on mount.
   useEffect(() => {
-    // check the user's localStorage for a token.
     const storedToken = localStorage.getItem('accessToken');
-
-    if (storedToken){
+    if (storedToken) {
       setToken(storedToken);
     }
-  }, []); // the empty [] means this effect runs once on component mount.
+  }, []);
 
-  // --- Logout Handler ---
   const handleLogout = () => {
-    // Remove token from localStorage
     localStorage.removeItem('accessToken');
-
-    // Update application state when logged out.
     setToken(null);
   };
 
-  //Conditional Rendering: if we DO NOT have a token, show the login component.
+  // --- LOGGED-OUT VIEW ---
+  // This block is now CORRECT. It ONLY renders the Login component.
   if (!token) {
-    //pass down the setToken function to the Login component as a prop
-    return(
-      <div>
+    return (
+      // We apply a base style for the entire application here
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
         <Login setToken={setToken} />
       </div>
     );
   }
 
-  //If we DO have a token, show a welcome message.
-// in App.jsx
+  // --- LOGGED-IN VIEW ---
+  // This is our main application view
   return (
-    <div className="bg-slate-900 text-white min-h-screen p-8"> 
+    <div className="min-h-screen bg-slate-100 pt-8">
       <TaskList />
-      <button onClick={handleLogout}>Logout</button>
+      {/* We will move the logout button into a proper header later */}
+      <div className="flex justify-center mt-8">
+         <button
+          onClick={handleLogout}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+         >
+          Logout
+        </button>
+      </div>
     </div>
   );
 }
-
 
 export default App;
