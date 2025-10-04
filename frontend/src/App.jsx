@@ -39,12 +39,11 @@ function App(){
   }
 
   //If we DO have a token, show a welcome message.
-  return(
-    <div>
+// in App.jsx
+  return (
+    <div className="bg-slate-900 text-white min-h-screen p-8"> 
       <TaskList />
-      {/*we pass the handleLogout function to the button's onClick event*/}
       <button onClick={handleLogout}>Logout</button>
-      {/*to be replaced later with TaskList component*/}
     </div>
   );
 }
