@@ -7,7 +7,7 @@ function TaskList(){
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        apiClient.get('/api/tasks/').then(response =>{
+        apiClient.get('/tasks/').then(response =>{
             setTasks(response.data);
         }).catch(error => console.error('Failed to fetch tasks:', error));
     }, []);
@@ -21,7 +21,7 @@ function TaskList(){
     const handleToggleCompleted = async (taskId, newCompletedStatus) => {
         try {
             //apiClient.patch to update 'completed' field
-            const response = await apiClient.patch(`/api/tasks/${taskId}/`, {
+            const response = await apiClient.patch(`/tasks/${taskId}/`, {
                 completed: newCompletedStatus,
             });
 
@@ -39,7 +39,7 @@ function TaskList(){
     const handleDeleteTask = async (taskId) =>{
         try {
             // apiClient.delelte to remove the task from the backend
-            await apiClient.delete(`/api/tasks/${taskId}/`);
+            await apiClient.delete(`/tasks/${taskId}/`);
             
             //update state locally to remove task from UI
             setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));
@@ -56,14 +56,14 @@ function TaskList(){
 
             <AddTaskForm onTaskAdded={handleTaskAdded} />
             <ul className="mt-4 space-y-2">
-                {tasks.map((task) => {
+                {tasks.map((task) => (
                     <Task 
                       key={task.id}
                       task={task}
                       onToggleCompleted={handleToggleCompleted}
                       onDelete={handleDeleteTask}
                     />
-                })}
+                ))}
             </ul>
         </div>
     );
