@@ -10,12 +10,14 @@ function Login({ setToken }){
 
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState(null); // State for error messages
 
     //this function is called when the user submits the form
     const handleSubmit = async (event) =>{
         
         // stop the browser's default behavior of reloading the page on form submission.
         event.preventDefault();
+        setError(null); // Clear previous errors
         try {
             // MAke the API POST request to the token endpoint
             const response = await axios.post('http://127.0.0.1:8000/api/token/',{
@@ -33,32 +35,53 @@ function Login({ setToken }){
 
         } catch (error) {
             console.error('Login failed:', error)
+            setError('Invalid username or password.'); // Set user-friendly error
         }
     };
 
 
     return (
-
-        // when this form is submitted, it will call our handleSubmit function.
-        <form onSubmit={handleSubmit}>
-            <h2>Login</h2>
+        <div className="max-w-md w-full mx-auto bg-white rounded-xl shadow-md p-8">
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <h2 className="text-3xl font-bold text-center text-gray-800">Login</h2>
+            {/* Display error message if it exists */}
+            {error && <p className="text-red-500 text-sm text-center">{error}</p>}
             <div>
-                <input 
-                type="text" 
-                placeholder="username" 
-                value={username} 
-                onChange={(e) => setUsername(e.target.value)}/>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+            <div className="mt-1">
+                <input
+                id="username"
+                type="text"
+                required
+                placeholder="Enter your username"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)} />
+            </div>
             </div>
             <div>
-                <input 
-                type="text" 
-                placeholder="password"
+            <label htmlFor="password-input" className="block text-sm font-medium text-gray-700">Password</label>
+            <div className="mt-1">
+                <input
+                id="password-input"
+                type="password"
+                required
+                placeholder="Enter your password"
+                className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)} />
             </div>
-
-            <button type="submit">Login</button>
+            </div>
+            <div>
+            <button
+                type="submit"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+                Sign in
+            </button>
+            </div>
         </form>
+        </div>
     );
 }
 

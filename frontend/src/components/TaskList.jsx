@@ -7,18 +7,9 @@ function TaskList(){
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                // apiClient makes GET requests to the /api/tasks/ endpoint
-                const response = await apiClient.get('/api/tasks/');
-                setTasks(response.data) //store fetched data in state
-            } catch (error) {
-                console.error('Failed to fetch tasks:', error)
-                
-            }
-        };
-
-        fetchTasks();
+        apiClient.get('/api/tasks/').then(response =>{
+            setTasks(response.data);
+        }).catch(error => console.error('Failed to fetch tasks:', error));
     }, []);
 
     // responsible for updating the state
@@ -29,7 +20,7 @@ function TaskList(){
     // Updating a task
     const handleToggleCompleted = async (taskId, newCompletedStatus) => {
         try {
-            //apiClient.path to update 'completed' field
+            //apiClient.patch to update 'completed' field
             const response = await apiClient.patch(`/api/tasks/${taskId}/`, {
                 completed: newCompletedStatus,
             });
@@ -58,19 +49,21 @@ function TaskList(){
     };
 
     return (
-        <div>
-            <h2>My Tasks</h2>
+        <div className="max-w-2x1 mx-auto bg-white rounded-xl shadow-md p-6">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">
+                My Tasks
+            </h2>
+
             <AddTaskForm onTaskAdded={handleTaskAdded} />
-            <ul>
-                {/* Map over the tasks array and create a list item for each one*/}
-                {tasks.map((task) => (
-                    <Task
-                        key={task.id}
-                        task={task}
-                        onToggleCompleted={handleToggleCompleted}
-                        onDelete={handleDeleteTask}
+            <ul className="mt-4 space-y-2">
+                {tasks.map((task) => {
+                    <Task 
+                      key={task.id}
+                      task={task}
+                      onToggleCompleted={handleToggleCompleted}
+                      onDelete={handleDeleteTask}
                     />
-                ))}
+                })}
             </ul>
         </div>
     );

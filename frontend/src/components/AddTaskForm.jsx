@@ -32,15 +32,20 @@ function AddTaskForm({ onTaskAdded }){
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input 
-            type="text" 
+        <form onSubmit={handleSubmit} className="flex space-x-2">
+        <input
+            type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="Add a new task!"
-            />
-
-            <button type="submit">Add Task</button>
+            placeholder="Add a new task..."
+            className="flex-grow p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+        >
+            Add Task
+        </button>
         </form>
     );
 }
