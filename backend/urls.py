@@ -21,6 +21,9 @@ urlpatterns = [
     # when a user POSTSs to '/api/token/refresh/', it will be handled by TokenRefreshView which returns a new access token
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
+    # --- our user management URLs ---
+    #any requests to /api/users/... will be handled by the users app
+    path('api/users/', include('users.urls')),
     
     # APP URLS
     #This line is the main switchboard operator
