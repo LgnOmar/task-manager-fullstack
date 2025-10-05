@@ -1,0 +1,15 @@
+# Git
+.git
+.gitignore
+
+# python
+venv/
+__pycache__/
+*.pyc
+
+#VSCode
+.vscode/
+
+# local development database
+db.sqlite3
+
