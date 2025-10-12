@@ -8,10 +8,9 @@ ENV PYTHONUNBUFFERED=1
 # 3. Set the working directory inside the container.
 WORKDIR /app
 
-# --- THE FIX: COPY AND SETUP THE ENTRYPOINT SXTIPT ---
+# COPY AND SETUP THE ENTRYPOINT SXTIPT ---
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
-# ------------------------------------------------------
 
 # 4.copy the requirements file FIRST [crucial optimization hbb]
 COPY backend/requirements.txt .

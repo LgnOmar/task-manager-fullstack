@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link } from 'react-router-dom';
 
 
-// Let's "desctucture" the props to get the setToken function passed from App.jsx
+// "desctucture" the props to get the setToken function passed from App.jsx
 function Login({ setToken }){
 
     // Give the component memory for the username and password input
