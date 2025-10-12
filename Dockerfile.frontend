@@ -1,0 +1,41 @@
+# The ~Build Workshop~
+# lets start from an offisial Node.js image.
+FROM node:20-alpine AS build
+
+
+# working dir in the container
+WORKDIR /app/frontend
+
+#Copy package.json and package-lock.json first
+#"npm install" will only run if the two .json files change
+COPY frontend/package*.json ./
+
+# install all dependencies
+RUN npm install
+
+#copy the frontend source code into our working dir
+COPY frontend/ ./
+
+# production build command
+RUN npm run build
+
+#setting up Nginx image
+#lets use a tiny official Nginx image.
+FROM nginx:1.25-alpine-slim
+
+# copy optimized build output from ~Build Workshop~
+# The output of `npm run build` is placed in the 'dist' folder.
+# We copy it into Nginx's default HTML serving directory.
+COPY --from=build /app/frontend/dist /usr/share/nginx/html
+
+# expose port 80, which is the default port Nginx listens on
+EXPOSE 80
+
+#Start Nginx when container starts.
+CMD ["nginx","-g","daemon off;"]
+
+# FROM node:20-alpine AS build: We start with a lightweight node image (based on Alpine Linux). The key is AS build. This names the entire first stage "build".
+# RUN npm run build: This executes the "build": "vite build" script from your package.json. Vite creates a dist folder containing the optimized production files.
+# FROM nginx:1.25-alpine-slim: This line starts a completely new, second image from scratch. The old node image and all its node_modules are now gone.
+# COPY --from=build /app/dist ...: This is the magic. The --from=build flag tells Docker: "Go back to that intermediate stage I named 'build', find the /app/dist folder inside it, and copy it into my current, clean Nginx image."
+# CMD ["nginx", "-g", "daemon off;"]: This is the standard command to run Nginx in the foreground, which is a requirement for Docker containers.

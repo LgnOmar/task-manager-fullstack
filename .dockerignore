@@ -7,6 +7,10 @@ venv/
 __pycache__/
 *.pyc
 
+# Node
+frontend/node_modules/
+
+
 #VSCode
 .vscode/
 
