@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app #Mounts local code for development hot reloading (optional but good)
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASSWORD=supersecretpassword
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "5173:80" # Map host port 5173 to container's port 80 (Nginx)
+    depends_on:
+      - backend
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=supersecretpassword
+    volumes:
+      - postgres_data:/var/lib/postgres/data/
+
+volumes:
+  postgres_data:

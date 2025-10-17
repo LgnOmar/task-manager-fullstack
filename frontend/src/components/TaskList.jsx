@@ -7,9 +7,27 @@ function TaskList(){
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        apiClient.get('/tasks/').then(response =>{
-            setTasks(response.data);
-        }).catch(error => console.error('Failed to fetch tasks:', error));
+        // apiClient.get('/tasks/').then(response =>{
+        //     setTasks(response.data);
+        // }).catch(error => console.error('Failed to fetch tasks:', error));
+
+        const fetchTasks = async () => {
+            try {
+                const response = await apiClient.get('/api/tasks/');
+                if (Array.isArray(response.data)) {
+                    setTasks(response.data);
+                } else {
+                    console.log("API did not return an array for tasks:", response.data);
+                    setTasks([]);
+                }
+            } catch (error) {
+                console.log("Failed to fetch fasks",error);
+                setTasks([]);
+            }
+        };
+
+        fetchTasks();
+
     }, []);
 
     // responsible for updating the state
@@ -21,7 +39,7 @@ function TaskList(){
     const handleToggleCompleted = async (taskId, newCompletedStatus) => {
         try {
             //apiClient.patch to update 'completed' field
-            const response = await apiClient.patch(`/tasks/${taskId}/`, {
+            const response = await apiClient.patch(`/api/tasks/${taskId}/`, {
                 completed: newCompletedStatus,
             });
 
@@ -39,7 +57,7 @@ function TaskList(){
     const handleDeleteTask = async (taskId) =>{
         try {
             // apiClient.delelte to remove the task from the backend
-            await apiClient.delete(`/tasks/${taskId}/`);
+            await apiClient.delete(`/api/tasks/${taskId}/`);
             
             //update state locally to remove task from UI
             setTasks((prevTasks) => prevTasks.filter((task) => task.id !== taskId));

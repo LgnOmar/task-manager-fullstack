@@ -14,11 +14,9 @@ router = DefaultRouter()
 #'tasks' is the base name for our URL endpoint.
 #'TaskViewSet' is the logic controller
 #'task' is a base name for the generated URL names
-router.register(r'tasks', TaskViewSet, basename='task')
+router.register(r'', TaskViewSet, basename='task')
 
 # The API URLs are now determined automatically by the router.
 # We just need to include the generated URLs in our url patterns.
 
-urlpatterns = [
-    path('', include(router.urls)),
-]
+urlpatterns = router.urls

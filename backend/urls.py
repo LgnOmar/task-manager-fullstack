@@ -28,7 +28,7 @@ urlpatterns = [
     # APP URLS
     #This line is the main switchboard operator
     # it says "any URL that starts with 'api/' should be forwarded to the urls.py file inside the 'tasks' app for further instructions"
-    path('api/', include('tasks.urls')),
+    path('api/tasks/', include('tasks.urls')),
 ]
 
 

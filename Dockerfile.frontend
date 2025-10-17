@@ -23,6 +23,8 @@ RUN npm run build
 #lets use a tiny official Nginx image.
 FROM nginx:1.25-alpine-slim
 
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
+
 # copy optimized build output from ~Build Workshop~
 # The output of `npm run build` is placed in the 'dist' folder.
 # We copy it into Nginx's default HTML serving directory.

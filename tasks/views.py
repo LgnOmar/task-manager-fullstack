@@ -16,7 +16,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     An API endpoint that allows users to view or edit their tasks.
     """
 
-    #Connect the translator: This viewset will use the TaskSerializer to convert data ro and from JSON.
+    #Connect the translator: This viewset will use the TaskSerializer to convert data to and from JSON.
     serializer_class = TaskSerializer
 
     #Set the security rule: Only authenticated [logged-in] users can access this endpoint. no exceptions.

@@ -16,7 +16,7 @@ function AddTaskForm({ onTaskAdded }){
 
         try {
             // Use our apiClient to send a POST request
-            const response = await apiClient.post('/tasks/', {
+            const response = await apiClient.post('/api/tasks/', {
                 title: title,
             });
 

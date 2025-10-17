@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
-
+import apiClient from "../api";
 
 // "desctucture" the props to get the setToken function passed from App.jsx
 function Login({ setToken }){
@@ -21,7 +21,7 @@ function Login({ setToken }){
         setError(null); // Clear previous errors
         try {
             // MAke the API POST request to the token endpoint
-            const response = await axios.post('http://127.0.0.1:8000/api/token/',{
+            const response = await apiClient.post('/api/token/',{
                 username: username,
                 password: password,
             });
