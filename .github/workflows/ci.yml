@@ -1,63 +1,78 @@
+# Name of our entire CI/CD pipeline
 name: CI Build Pipeline
 
+# The trigger: when does this workflow run?
 on:
- push:
-  branches: [ "**" ]
- workflow_dispatch:
+  # Run on every push to any branch
+  push:
+    branches: [ "**" ]
+  # Also allow us to run it manually from the GitHub Actions UI
+  workflow_dispatch:
 
-
+# The jobs that will be executed. We can run them in parallel.
 jobs:
+  # --------------------- BACKEND JOB ---------------------
   build-backend:
-      name: Build Backend Docker Image
+    # Give the job a name
+    name: Build Backend Docker Image
 
-      runs-on: ubuntu-latest
-
-      steps:
-        - name: Check out code
-          uses: actions/checkout@v4
-
-        - name: Set up Docker Buildx
-          uses: docker/setup-buildx-action@v3
-
-        - name: Log in to Docker Hub
-          uses: docker/login-action@v3
-          with:
-            username: ${{ secrets.DOCKERHUB_USERNAME }}
-            password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-        - name: Build and push backend image
-          uses: docker/build-push-action@v5
-          with:
-            context: .
-            dockerfile: dockerfile
-            push: ${{ github.ref == 'refs/heads/main' }}
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/tasks-manager-backend:latest
-            
-  build-frontend:
-    name: Build Frontend Docker Image
+    # The type of virtual machine to run the job on
     runs-on: ubuntu-latest
 
+    # The sequence of steps to execute
     steps:
+      # Step 1: Check out our source code from the repository
       - name: Check out code
         uses: actions/checkout@v4
-        
+
+      # Step 2: Set up Docker Buildx (an advanced builder)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-        
+
+      # Step 3: Log in to Docker Hub (optional but good practice)
+      # We use secrets to avoid exposing credentials in our code.
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME}}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      
+      # Step 4: Build and Push the backend image
+      # We only push if it's the main branch, otherwise just build.
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-backend:latest
+          
+  # --------------------- FRONTEND JOB ---------------------
+  build-frontend:
+    # Give the job a name
+    name: Build Frontend Docker Image
+
+    # Run on the same type of machine
+    runs-on: ubuntu-latest
+    
+    # This job has the same steps, but points to the frontend Dockerfile
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push frontend image
         uses: docker/build-push-action@v5
         with:
           context: .
-          dockerfile: dockerfile.frontend
-          push: ${{ github.ref == 'ref/heads/main' }}
+          dockerfile: Dockerfile.frontend
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-frontend:latest
-          
-
-      
